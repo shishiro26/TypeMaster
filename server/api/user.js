@@ -5,11 +5,14 @@ const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const authenticateToken = require("../middleware/validateToken");
+const { v4: uuidv4 } = require("uuid");
 
 router.post(
   "/signup",
   asyncHandler(async (req, res) => {
     let { name, email, number, password, DOB } = req.body;
+
+    const id = uuidv4();
 
     if (!name || !email || !number || !password || !DOB) {
       return res.status(400).json({
@@ -63,6 +66,7 @@ router.post(
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User({
+      id,
       name,
       email,
       number,
@@ -118,6 +122,7 @@ router.post(
         status: "Success",
         message: "Login successful",
         user: {
+          id: user.id,
           name: user.name,
           email: user.email,
           number: user.number,
@@ -127,6 +132,25 @@ router.post(
         expiresin: "1h",
       });
     }
+  })
+);
+
+router.get(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const user = await User.find({ id });
+
+    if (!user) {
+      return res.status(400).json({
+        status: "Fail",
+        message: "User not found",
+      });
+    }
+    return res.status(200).json({
+      status: "Success",
+      message: user,
+    });
   })
 );
 

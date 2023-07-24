@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import shishiro from "../assets/shishiroaka.jpg";
 import "../css/profile.css";
 import WebFont from "webfontloader";
+import axios from "axios";
 
 WebFont.load({
   google: {
@@ -10,6 +11,25 @@ WebFont.load({
 });
 
 function Profile() {
+  const [profileData, setProfileData] = useState(null);
+
+  useEffect(() => {
+    profileInfo();
+  }, []);
+
+  function profileInfo() {
+    const id = sessionStorage.getItem("id");
+    axios
+      .get(`http://localhost:3001/user/${id}`)
+      .then((res) => {
+        console.log(res.data);
+        setProfileData(res.data);
+      })
+      .catch((err) => {
+        console.log("Error while fetching the data", err);
+      });
+  }
+
   return (
     <div className="profileContainer">
       <div
@@ -46,81 +66,84 @@ function Profile() {
             zIndex: "999",
           }}
         >
-          <h1>Welcome,Shishiro</h1>
-          <ul
-            style={{
-              listStyle: "none",
-              fontSize: "20px",
-              textTransform: "capitalize",
-              padding: "15px",
-              margin: "5px",
-            }}
-          >
-            <li>
-              <div
-                style={{
-                  marginBottom: "5px",
-                }}
-              >
-                Name:
-                <span
+          <>
+            <h1>Welcome, {profileData.name}</h1>
+            <ul
+              style={{
+                listStyle: "none",
+                fontSize: "20px",
+                textTransform: "capitalize",
+                padding: "15px",
+                margin: "5px",
+              }}
+            >
+              <li>
+                <div
                   style={{
-                    marginLeft: "5px",
+                    marginBottom: "5px",
                   }}
                 >
-                  Shishiro
-                </span>
-              </div>
-            </li>
-            <li>
-              <div
-                style={{
-                  marginBottom: "5px",
-                }}
-              >
-                Email:
-                <span
+                  Name:
+                  <span
+                    style={{
+                      marginLeft: "5px",
+                    }}
+                  >
+                    {profileData.name}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
                   style={{
-                    marginLeft: "5px",
+                    marginBottom: "5px",
                   }}
                 >
-                  LCS2022014@iiitl.ac.in
-                </span>
-              </div>
-            </li>
-            <li>
-              <div
-                style={{
-                  marginBottom: "5px",
-                }}
-              >
-                Contact:
-                <span
+                  Email:
+                  <span
+                    style={{
+                      marginLeft: "5px",
+                    }}
+                  >
+                    {profileData.email}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
                   style={{
-                    marginLeft: "5px",
+                    marginBottom: "5px",
                   }}
                 >
-                  +91 81212 78087
-                </span>
-              </div>
-            </li>
-            <li>
-              <div
-                style={{
-                  marginBottom: "5px",
-                }}
-              >
-                DOB:
-                <span
+                  Contact:
+                  <span
+                    style={{
+                      marginLeft: "5px",
+                    }}
+                  >
+                    {profileData.number}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <div
                   style={{
-                    marginLeft: "5px",
+                    marginBottom: "5px",
                   }}
                 >
-                  26-April-2005
-                </span>
-              </div>
-            </li>
-          </ul>
+                  DOB:
+                  <span
+                    style={{
+                      marginLeft: "5px",
+                    }}
+                  >
+                    {profileData.DOB}
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </>
+
         </div>
       </div>
     </div>

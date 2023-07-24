@@ -22,8 +22,8 @@ export default function App() {
   return (
     <div className="App">
       <>
-        {/* <Navbar /> */}
-        <Navbar1 />
+        <Navbar />
+        {/* <Navbar1 /> */}
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />

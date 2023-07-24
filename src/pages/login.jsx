@@ -34,17 +34,14 @@ export default function Login() {
     axios
       .post(`http://localhost:3001/user/login`, formData)
       .then((res) => {
-        // console.log(res.data);
-
         if (res.data.status === "Success") {
-
           toast.success("Login successful");
           const accessToken = res.data.token;
+          const id = res.data.user.id; // Assuming the server sends the id in the response
           sessionStorage.setItem("accessToken", accessToken);
-
+          sessionStorage.setItem("id", id);
           navigate("/");
         } else {
-
           toast.error(res.data.message);
         }
       })
