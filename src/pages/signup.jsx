@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import "../css/signup.css";
 import show from "../assets/show.png";
 import hide from "../assets/hide.png";
-import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Register() {
   const [data, setData] = useState({
@@ -15,20 +16,9 @@ function Register() {
     confirmPassword: "",
   });
 
-
-  async function save(event) {
-    event.preventDefault();
-    try {
-      await axios.post("http://localhost:5002/api/v1/auth/register", {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      });
-      alert("User Registation Successfully");
-    } catch (err) {
-      alert(err);
-    }
-  }
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,26 +26,32 @@ function Register() {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await axios.post("http://localhost:8080/", {
-        name: data.name,
-        email: data.email,
-        password: data.password,
+
+    fetch("http://localhost:3001/user/signup", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        if (responseData.status === "Success") {
+          toast.success("Registered successfully");
+        } else if (responseData.status === "Fail") {
+          toast.error(responseData.message);
+        }
+      })
+      .catch((err) => {
+        toast.error("Error occurred while registering", err);
       });
-      alert("Registered Successfully");
-    } catch (error) {
-      alert(error);
-    }
   };
 
   return (
-    <div className="container">
+    <div className="signUpContainer">
+      <ToastContainer />
       <form className="signUpBox" onSubmit={handleSubmit}>
         <h1>Sign Up</h1>
         <div>
@@ -151,7 +147,7 @@ function Register() {
           />
         </div>
         <div>
-          <button className="btn" style={{ width: "452px" }} type="submit" onClick={save}>
+          <button className="btn" style={{ width: "452px" }} type="submit">
             Sign Up
           </button>
         </div>

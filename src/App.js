@@ -13,7 +13,7 @@ import Navbar1 from "./Components/navBar1";
 // import Preview from "./pages/preview";
 import Profile from "./pages/profile";
 import HomeBar from "./Components/home1";
-import Register from "./pages/Register";
+import Register from "./pages/signup";
 
 export default function App() {
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function App() {
         <Navbar1 />
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
+          <Route path="/signup" element={<Register />} />
           <Route path="/" element={<Home />} />
           {/* <Route path="/preview" element={<Preview />} /> */}
           <Route path="/play" element={<Play />} />
