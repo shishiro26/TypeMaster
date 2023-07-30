@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
-import shishiro from "../assets/shishiroaka.jpg";
+import React, { useEffect } from "react";
+import shishiroimg from "../assets/shishiroaka.jpg";
+import defaultimg from "../assets/defaultUser.jpeg"
 import "../css/profile.css";
 import WebFont from "webfontloader";
 import axios from "axios";
+import { useState } from "react";
 
 WebFont.load({
   google: {
@@ -11,24 +13,27 @@ WebFont.load({
 });
 
 function Profile() {
-  const [profileData, setProfileData] = useState(null);
+  const [profileData, setProfileData] = useState('')
 
   useEffect(() => {
-    profileInfo();
-  }, []);
+    const fetchProfileData = async () => {
+      try {
+        const id = sessionStorage.getItem("id");
+        const token = sessionStorage.getItem("accessToken")
+        const response = await axios.get(`http://localhost:3001/user/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  function profileInfo() {
-    const id = sessionStorage.getItem("id");
-    axios
-      .get(`http://localhost:3001/user/${id}`)
-      .then((res) => {
-        console.log(res.data);
-        setProfileData(res.data);
-      })
-      .catch((err) => {
-        console.log("Error while fetching the data", err);
-      });
-  }
+        setProfileData(response.data.message);
+      } catch (err) {
+        console.log("Error while fetching data:", err);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
 
   return (
     <div className="profileContainer">
@@ -56,7 +61,7 @@ function Profile() {
             padding: "10px 15px",
           }}
         >
-          <img src={shishiro} alt="shishiro" className="profileImage" />
+          <img src={profileData.name === "shishiro" || "SHISHIRO" || "Shishiro" ? shishiroimg : defaultimg} alt="shishiro" className="profileImage" />
         </div>
         <div
           style={{
@@ -66,84 +71,78 @@ function Profile() {
             zIndex: "999",
           }}
         >
-          <>
-            <h1>Welcome, {profileData.name}</h1>
-            <ul
-              style={{
-                listStyle: "none",
-                fontSize: "20px",
-                textTransform: "capitalize",
-                padding: "15px",
-                margin: "5px",
-              }}
-            >
-              <li>
-                <div
+          <h1>Welcome,{profileData.name}</h1>
+          <ul
+            style={{
+              listStyle: "none",
+              fontSize: "20px",
+              textTransform: "capitalize",
+              padding: "15px",
+              margin: "5px",
+            }}
+          >
+            <li>
+              <div
+                style={{
+                  marginBottom: "5px",
+                }}
+              >
+                Name:
+                <span
                   style={{
-                    marginBottom: "5px",
+                    marginLeft: "5px",
                   }}
                 >
-                  Name:
-                  <span
-                    style={{
-                      marginLeft: "5px",
-                    }}
-                  >
-                    {profileData.name}
-                  </span>
-                </div>
-              </li>
-              <li>
-                <div
+                  {profileData.name}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                style={{
+                  marginBottom: "5px",
+                }}
+              >
+                Email:
+                <span
                   style={{
-                    marginBottom: "5px",
+                    marginLeft: "5px",
                   }}
                 >
-                  Email:
-                  <span
-                    style={{
-                      marginLeft: "5px",
-                    }}
-                  >
-                    {profileData.email}
-                  </span>
-                </div>
-              </li>
-              <li>
-                <div
+                  {profileData.email}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                style={{
+                  marginBottom: "5px",
+                }}
+              >
+                Contact:
+                <span
                   style={{
-                    marginBottom: "5px",
+                    marginLeft: "5px",
                   }}
                 >
-                  Contact:
-                  <span
-                    style={{
-                      marginLeft: "5px",
-                    }}
-                  >
-                    {profileData.number}
-                  </span>
-                </div>
-              </li>
-              <li>
-                <div
-                  style={{
-                    marginBottom: "5px",
-                  }}
-                >
-                  DOB:
-                  <span
-                    style={{
-                      marginLeft: "5px",
-                    }}
-                  >
-                    {profileData.DOB}
-                  </span>
-                </div>
-              </li>
-            </ul>
-          </>
+                  +91 {profileData.number}
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                style={{
+                  marginBottom: "5px",
+                }}
+              >
+                DOB:
+                <span style={{ marginLeft: "5px" }}>
+                  {new Date(profileData.DOB).toLocaleDateString()}
+                </span>
 
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

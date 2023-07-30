@@ -29,9 +29,9 @@ export default function Navbar() {
             <li>
               <Link to="/play">PLAY</Link>
             </li>
-            {/* <li>
+            <li>
               <Link to="/stats">STATS</Link>
-            </li> */}
+            </li>
             {/* <li>
               <Link to="/online">Play Online</Link>
             </li> */}

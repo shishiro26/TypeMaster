@@ -5,6 +5,8 @@ import show from "../assets/show.png";
 import hide from "../assets/hide.png";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import 'bootstrap/dist/css/bootstrap.css';
+
 
 function Register() {
   const [data, setData] = useState({

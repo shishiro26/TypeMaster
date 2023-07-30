@@ -1,11 +1,9 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-const userRouter = require("../server/api/user");
 const errorHandler = require("./middleware/errorHandler");
 const cors = require("cors");
 require("./config/db");
-
 dotenv.config();
 
 app.use(express.json());
@@ -18,7 +16,7 @@ app.use(
 
 app.use(errorHandler);
 
-app.use("/user", userRouter);
+app.use("/user", require("./Routes/userRoutes"));
 
 const port = process.env.PORT || 5000;
 
